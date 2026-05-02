@@ -26,10 +26,14 @@
 | Service | Port | 설명 |
 | :--- | :--- | :--- |
 | Zookeeper | 2181 | Kafka 메타데이터 관리 |
-| Kafka | 9092 | 메시지 브로커 |
+| Kafka1 | 9092 | 메시지 브로커 (BROKER_ID: 1) |
+| Kafka2 | 9093 | 메시지 브로커 (BROKER_ID: 2) |
+| Kafka3 | 9094 | 메시지 브로커 (BROKER_ID: 3) |
 | Kafka UI | 8080 | 웹 대시보드 |
 | Producer | — | OS 지표 수집 및 발행 |
 | Consumer | — | 임계치 초과 경고 출력 |
+
+> 브로커 3개 클러스터 구성. `system-metrics` 토픽은 레플리카 3개로 설정되어 브로커 1개 장애 시에도 서비스가 유지된다.
 
 ## 실행 방법
 
