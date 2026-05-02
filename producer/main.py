@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from kafka import KafkaProducer
 from kafka.errors import NoBrokersAvailable
 
-BOOTSTRAP_SERVERS = ["kafka:9092"]
+BOOTSTRAP_SERVERS = ["kafka1:9092", "kafka2:9092", "kafka3:9092"]
 TOPIC = "system-metrics"
 
 
