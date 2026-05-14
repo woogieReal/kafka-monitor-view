@@ -38,7 +38,7 @@
 ## 실행 방법
 
 ```bash
-docker compose up --build
+docker compose up -d --build
 ```
 
 ## 디렉토리 구조
