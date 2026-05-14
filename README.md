@@ -41,6 +41,12 @@
 docker compose up -d --build
 ```
 
+## 재시작
+
+```bash
+docker compose down --remove-orphans && docker compose up -d
+```
+
 ## 디렉토리 구조
 
 ```

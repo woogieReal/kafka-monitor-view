@@ -12,7 +12,7 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ADVERTISED_HOST_NAME: kafka1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CREATE_TOPICS: "system-metrics:1:3"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
     depends_on:
       - zookeeper
 
@@ -24,6 +24,7 @@ services:
       KAFKA_BROKER_ID: 2
       KAFKA_ADVERTISED_HOST_NAME: kafka2
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
     depends_on:
       - zookeeper
 
@@ -35,8 +36,20 @@ services:
       KAFKA_BROKER_ID: 3
       KAFKA_ADVERTISED_HOST_NAME: kafka3
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
     depends_on:
       - zookeeper
+
+  kafka-init:
+    image: wurstmeister/kafka:latest
+    depends_on:
+      - kafka1
+      - kafka2
+      - kafka3
+    volumes:
+      - ./kafka-init/init-topics.sh:/init-topics.sh
+    entrypoint: ["/bin/bash", "/init-topics.sh"]
+    restart: "no"
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
@@ -54,14 +67,12 @@ services:
     build: ./producer
     restart: on-failure
     depends_on:
-      - kafka1
-      - kafka2
-      - kafka3
+      kafka-init:
+        condition: service_completed_successfully
 
   consumer:
     build: ./consumer
     restart: on-failure
     depends_on:
-      - kafka1
-      - kafka2
-      - kafka3
+      kafka-init:
+        condition: service_completed_successfully

@@ -8,10 +8,14 @@ BOOTSTRAP_SERVERS = ["kafka1:9092", "kafka2:9092", "kafka3:9092"]
 TOPIC = "system-metrics"
 
 
+GROUP_ID = "system-metrics-group"
+
+
 def create_consumer():
     return KafkaConsumer(
         TOPIC,
         bootstrap_servers=BOOTSTRAP_SERVERS,
+        group_id=GROUP_ID,
         value_deserializer=lambda v: json.loads(v.decode("utf-8")),
         auto_offset_reset="latest",
     )
@@ -30,8 +34,9 @@ if __name__ == "__main__":
     for message in consumer:
         data = message.value
         cpu_usage = data["metrics"]["cpu_usage"]
+        partition = message.partition
 
         if cpu_usage > 1.0:
-            print(f"🚨 CPU 경고! cpu_usage={cpu_usage} | {data}")
+            print(f"🚨 CPU 경고! partition={partition} cpu_usage={cpu_usage} | {data}")
         else:
-            print(f"수신: {data}")
+            print(f"수신: partition={partition} | {data}")
